@@ -66,3 +66,54 @@ move_cursor_right()
 print(buffer)
 print(gap_start, gap_end)
 # TODO: END
+
+
+# TODO: Insert, Backspace, Grow gap
+def grow_gap(grow_by=5):
+    global gap_end, gap_start, buffer
+    # create a copy of old buffer to new buffer with the added space
+    old = buffer
+    n = len(buffer)
+    right_len = n - gap_end
+    new = ["_"] * (n + grow_by)
+
+    # add the old buffer from index 0 - gap_start to the new buffer
+    new[:gap_start] = old[:gap_start]
+
+    # add the right side of the gap to new's end
+    if right_len > 0:
+        new[-right_len:] = old[gap_end:]
+    buffer = new
+    gap_end = len(new) - right_len
+
+
+def insert_text(text):
+    global gap_start, gap_end
+    for ch in text:
+        if gap_start == gap_end:
+            grow_gap()
+        buffer[gap_start] = ch
+        gap_start += 1
+
+
+insert_text("RLD\nThis\nis\nso\nintersting!")
+move_cursor_left()
+insert_text("END")
+
+print(buffer)
+print(gap_start, gap_end)
+
+
+def backspace():
+    global gap_start
+    if gap_start == 0:
+        return
+    gap_start -= 1
+    buffer[gap_start] = "_"
+
+
+backspace()
+
+print(buffer)
+print(gap_start, gap_end)
+# TODO: END
